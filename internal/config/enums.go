@@ -15,9 +15,9 @@ const (
 	ForgejoServerURL env    = "FORGEJO_SERVER_URL"
 	ForgejoEventName env    = "FORGEJO_EVENT_NAME"
 	ForgejoEventPath env    = "FORGEJO_EVENT_PATH"
-	TelegramBotToken env    = "BOT_TOKEN"
-	TelegramChatID   env    = "CHAT_ID"
-	TelegramTopicID  env    = "TOPIC_ID"
+	TelegramBotToken env    = "INPUT_TOKEN"
+	TelegramChatID   env    = "INPUT_CHAT_ID"
+	TelegramTopicID  env    = "INPUT_TOPIC_ID"
 	ForgejoEnvFile   string = ".env"
 	FromFile         bool   = true
 	FromEnv          bool   = false
