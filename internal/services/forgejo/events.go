@@ -23,6 +23,7 @@ type pullRequest struct {
 	UpdatedAt string `json:"updated_at"`
 	URL       string `json:"url"`
 	User      prUser `json:"user"`
+	Merged    bool   `json:"merged"`
 }
 
 type prUser struct {

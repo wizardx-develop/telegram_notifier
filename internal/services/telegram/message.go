@@ -16,7 +16,7 @@ type FormatMessage struct {
 	InlineKeyboard *gotgbot.InlineKeyboardMarkup
 }
 
-func emoji(prType string) string {
+func choiceEmoji(prType string) string {
 	switch prType {
 	case config.OpenedType:
 		return "🆕"
@@ -32,10 +32,21 @@ func emoji(prType string) string {
 		return ""
 	}
 }
+func isMerged(pr *forgejo.PullRequestAction) string {
+	if pr.Action == config.ClosedType {
+		if pr.PullRequest.Merged {
+			return config.MergedType
+		}
+	}
+	return pr.Action
+}
 func CreateMessage(pr *forgejo.PullRequestAction) (*FormatMessage, error) {
+	action := isMerged(pr)
+	emoji := choiceEmoji(action)
+
 	msg := fmt.Sprintf(
 		"%s <b>Pull Request №%d:</b> <code>%s</code>\n📝 <b>PR Title:</b> <a href=\"%s\">%s</a>\n\n🧑‍💻 <b>Actor:</b> <a href=\"%s\">%s</a>\n📦 <b>Repository:</b> <a href=\"%s\">%s</a>\n",
-		emoji(pr.Action), pr.Number, pr.Action,
+		emoji, pr.Number, action,
 		pr.PullRequest.URL, pr.PullRequest.Title,
 		pr.PullRequest.User.HTMLURL, pr.PullRequest.User.Username,
 		pr.PullRequest.Base.Repo.HTMLURL, pr.PullRequest.Base.Repo.FullName,

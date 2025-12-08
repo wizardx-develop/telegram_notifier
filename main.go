@@ -37,5 +37,6 @@ func main() {
 	err = telegram.SendMessage(msg)
 	if err != nil {
 		slog.Error("failed send telegram message", "error", err)
+		os.Exit(1)
 	}
 }
