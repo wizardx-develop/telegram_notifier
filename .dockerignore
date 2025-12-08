@@ -1,0 +1,5 @@
+./.env
+./client/
+./config/connection_config.go
+./.gitignore
+./test_data.json

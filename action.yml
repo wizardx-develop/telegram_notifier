@@ -1,0 +1,19 @@
+name: "Golang Telegram Notify Action"
+description: "Sends notifications to Telegram from Forgejo Actions"
+author: "wizardx"
+inputs:
+  token:
+    description: "Telegram Bot Token"
+    required: true
+  chat_id:
+    description: "Chat ID to send the notification"
+    required: true
+  thread_id:
+    description: "Thread ID (optional)"
+    required: false
+outputs:
+  notify_result:
+    description: "Result of the notification"
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
