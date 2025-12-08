@@ -33,9 +33,13 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Println(msg.Message)
 	err = telegram.SendMessage(msg)
 	if err != nil {
 		slog.Error("failed send telegram message", "error", err)
+		os.Exit(1)
 	}
+
+	event, _ := forgejo.ReadEventFile()
+
+	fmt.Println(string(event))
 }
