@@ -11,6 +11,9 @@ inputs:
   thread_id:
     description: "Thread ID (optional)"
     required: false
+  forgejo_token:
+    description: "pat token (optional)"
+    required: false
 outputs:
   notify_result:
     description: "Result of the notification"

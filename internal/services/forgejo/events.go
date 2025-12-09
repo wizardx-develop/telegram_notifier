@@ -9,8 +9,8 @@ import (
 
 const eventType = "pull_request"
 
-// PullRequestAction структура для работы с данными эвента из файла
-type PullRequestAction struct {
+// ActionPayload структура для работы с данными эвента из файла
+type ActionPayload struct {
 	Action      string      `json:"action"`
 	Number      uint        `json:"number"`
 	PullRequest pullRequest `json:"pull_request"`
@@ -18,12 +18,17 @@ type PullRequestAction struct {
 
 type pullRequest struct {
 	Base      prBase `json:"base"`
+	Head      prHead `json:"head"`
 	State     string `json:"state"`
 	Title     string `json:"title"`
 	UpdatedAt string `json:"updated_at"`
 	URL       string `json:"url"`
 	User      prUser `json:"user"`
 	Merged    bool   `json:"merged"`
+}
+
+type prHead struct {
+	SHA string `json:"sha"`
 }
 
 type prUser struct {
@@ -38,6 +43,7 @@ type prBase struct {
 type prRepo struct {
 	FullName string `json:"full_name"`
 	HTMLURL  string `json:"html_url"`
+	Name     string `json:"name"`
 }
 
 // ReadEventFile читает файл эвента из ОС
@@ -63,7 +69,7 @@ func GetEventFilePath() (string, error) {
 }
 
 // Parse парсит jsonчик для получения нужной структуры сообщения
-func (pr *PullRequestAction) Parse() error {
+func (pr *ActionPayload) Parse() error {
 	err := CheckEventType()
 	if err != nil {
 		slog.Error("check event type failed", slog.Any("error", err))

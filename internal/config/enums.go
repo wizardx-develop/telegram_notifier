@@ -11,7 +11,7 @@ var (
 )
 
 const (
-	ForgejoToken     env    = "FORGEJO_TOKEN"
+	ForgejoToken     env    = "INPUT_FORGEJO_TOKEN"
 	ForgejoServerURL env    = "FORGEJO_SERVER_URL"
 	ForgejoEventName env    = "FORGEJO_EVENT_NAME"
 	ForgejoEventPath env    = "FORGEJO_EVENT_PATH"

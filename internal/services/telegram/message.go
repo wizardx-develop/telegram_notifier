@@ -8,6 +8,7 @@ import (
 	"wizardx/telegram_notifier/internal/config"
 	"wizardx/telegram_notifier/internal/services/forgejo"
 
+	"code.gitea.io/sdk/gitea"
 	"github.com/PaulSonOfLars/gotgbot/v2"
 )
 
@@ -32,7 +33,7 @@ func choiceEmoji(prType string) string {
 		return ""
 	}
 }
-func isMerged(pr *forgejo.PullRequestAction) string {
+func isMerged(pr *forgejo.ActionPayload) string {
 	if pr.Action == config.ClosedType {
 		if pr.PullRequest.Merged {
 			return config.MergedType
@@ -40,17 +41,25 @@ func isMerged(pr *forgejo.PullRequestAction) string {
 	}
 	return pr.Action
 }
-func CreateMessage(pr *forgejo.PullRequestAction) (*FormatMessage, error) {
+func CreateMessage(pr *forgejo.ActionPayload, commit *gitea.Commit) (*FormatMessage, error) {
 	action := isMerged(pr)
 	emoji := choiceEmoji(action)
 
 	msg := fmt.Sprintf(
-		"%s <b>Pull Request №%d:</b> <code>%s</code>\n📝 <b>PR Title:</b> <a href=\"%s\">%s</a>\n\n🧑‍💻 <b>Actor:</b> <a href=\"%s\">%s</a>\n📦 <b>Repository:</b> <a href=\"%s\">%s</a>\n",
+		"%s <b>Pull Request №%d:</b> <code>%s</code>\n"+
+			"📝 <b>PR Title:</b> <a href=\"%s\">%s</a>\n\n"+
+			"🧑‍💻 <b>Actor:</b> <a href=\"%s\">%s</a>\n"+
+			"📦 <b>Repository:</b> <a href=\"%s\">%s</a>\n",
 		emoji, pr.Number, action,
 		pr.PullRequest.URL, pr.PullRequest.Title,
 		pr.PullRequest.User.HTMLURL, pr.PullRequest.User.Username,
 		pr.PullRequest.Base.Repo.HTMLURL, pr.PullRequest.Base.Repo.FullName,
 	)
+	if commit != nil {
+		msg += fmt.Sprintf("✉️ <b>Commit message:</b> <a href=\"%s\">%s</a>\n",
+			commit.HTMLURL, commit.RepoCommit.Message,
+		)
+	}
 	message := &FormatMessage{
 		Message:        msg,
 		InlineKeyboard: CreateButtonWithLink(pr),
@@ -96,11 +105,11 @@ func SendMessage(msg *FormatMessage) error {
 		return err
 	}
 
-	slog.Info("telegram message send")
+	slog.Info("the message has been sent")
 	return nil
 }
 
-func CreateButtonWithLink(pr *forgejo.PullRequestAction) *gotgbot.InlineKeyboardMarkup {
+func CreateButtonWithLink(pr *forgejo.ActionPayload) *gotgbot.InlineKeyboardMarkup {
 	btn := gotgbot.InlineKeyboardButton{
 		Text: "↗️Link to Pull Request",
 		Url:  pr.PullRequest.URL,
