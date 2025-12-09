@@ -1,10 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"log/slog"
 	"os"
-	"strings"
 
 	"wizardx/telegram_notifier/internal/services/forgejo"
 	"wizardx/telegram_notifier/internal/services/telegram"
@@ -26,15 +24,11 @@ func main() {
 	LoggerInit()
 
 	pr := &forgejo.ActionPayload{}
-
 	err := pr.Parse()
 	if err != nil {
 		os.Exit(1)
 	}
 
-	separator := strings.Repeat("*", 40)
-
-	fmt.Println(separator)
 	serverURL := forgejo.GetServerURL()
 	if serverURL == "" {
 		slog.Error("Server URL is empty")
