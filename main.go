@@ -6,7 +6,6 @@ import (
 	"os"
 	"strings"
 
-	"wizardx/telegram_notifier/internal/config"
 	"wizardx/telegram_notifier/internal/services/forgejo"
 	"wizardx/telegram_notifier/internal/services/telegram"
 
@@ -36,9 +35,20 @@ func main() {
 	separator := strings.Repeat("*", 40)
 
 	fmt.Println(separator)
+	serverURL := forgejo.GetServerURL()
+	if serverURL == "" {
+		slog.Error("Server URL is empty")
+		os.Exit(1)
+	}
+	forgejoToken := forgejo.GetForgejoToken()
+	if forgejoToken == "" {
+		slog.Error("Forgejo token is empty")
+		os.Exit(1)
+	}
+
 	client, err := forgejo.CreateClient(
-		os.Getenv(config.ForgejoServerURL.ToString()),
-		os.Getenv(config.ForgejoToken.ToString()),
+		serverURL,
+		forgejoToken,
 		[]gitea.ClientOption{},
 	)
 	if err != nil {

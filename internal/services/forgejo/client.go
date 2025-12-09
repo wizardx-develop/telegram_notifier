@@ -3,6 +3,8 @@ package forgejo
 import (
 	"fmt"
 	"log/slog"
+	"os"
+	"wizardx/telegram_notifier/internal/config"
 
 	"code.gitea.io/sdk/gitea"
 )
@@ -34,4 +36,14 @@ func GetCommitMsg(client *gitea.Client, pr *ActionPayload) (*gitea.Commit, error
 		return nil, fmt.Errorf("request error %d", responce.StatusCode)
 	}
 	return commit, nil
+}
+
+func GetForgejoToken() string {
+	token := os.Getenv(config.ForgejoToken.ToString())
+	return token
+}
+
+func GetServerURL() string {
+	url := os.Getenv(config.ForgejoServerURL.ToString())
+	return url
 }
