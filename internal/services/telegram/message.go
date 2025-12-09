@@ -55,7 +55,7 @@ func CreateMessage(pr *forgejo.ActionPayload, commit *gitea.Commit) (*FormatMess
 		pr.PullRequest.User.HTMLURL, pr.PullRequest.User.Username,
 		pr.PullRequest.Base.Repo.HTMLURL, pr.PullRequest.Base.Repo.FullName,
 	)
-	if commit != nil {
+	if commit != nil && action != config.MergedType {
 		msg += fmt.Sprintf("✉️ <b>Commit message:</b> <a href=\"%s\">%s</a>\n",
 			commit.HTMLURL, commit.RepoCommit.Message,
 		)
