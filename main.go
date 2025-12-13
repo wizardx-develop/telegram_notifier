@@ -52,7 +52,6 @@ func main() {
 	commitMsg, err := forgejo.GetCommitMsg(client, pr)
 	if err != nil {
 		slog.Error("get commit msg error", "error", err)
-		os.Exit(1)
 	}
 	msg, err := telegram.CreateMessage(pr, commitMsg)
 	if err != nil {
