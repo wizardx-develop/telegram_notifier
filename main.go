@@ -13,8 +13,8 @@ import (
 // LoggerInit настройка логирования
 func LoggerInit() {
 	opts := slog.HandlerOptions{
-		Level:     slog.LevelInfo,
-		AddSource: false,
+		Level:     slog.LevelDebug,
+		AddSource: true,
 	}
 	logger := slog.New(slog.NewJSONHandler(os.Stderr, &opts))
 	slog.SetDefault(logger)

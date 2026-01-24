@@ -22,6 +22,9 @@ func CreateClient(url, gitToken string, options []gitea.ClientOption) (*gitea.Cl
 }
 
 func GetCommitMsg(client *gitea.Client, pr *ActionPayload) (*gitea.Commit, error) {
+	if pr.Action != config.SynchronizedType {
+		return nil, fmt.Errorf("commit isn't syncronized type")
+	}
 	commit, responce, err := client.GetSingleCommit(
 		pr.PullRequest.User.Username,
 		pr.PullRequest.Base.Repo.Name,
@@ -35,6 +38,7 @@ func GetCommitMsg(client *gitea.Client, pr *ActionPayload) (*gitea.Commit, error
 	if responce.StatusCode >= 400 {
 		return nil, fmt.Errorf("request error %d", responce.StatusCode)
 	}
+	slog.Debug(commit.URL)
 	return commit, nil
 }
 
